@@ -11,10 +11,19 @@ import {
   AlertTriangle, 
   Bot, 
   ShieldCheck, 
-  HelpCircle
+  HelpCircle,
+  PanelLeftClose
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, alertCount = 0, candidateCount = 0, onOpenTutorial }) {
+export default function Sidebar({ 
+  activeTab, 
+  setActiveTab, 
+  alertCount = 0, 
+  candidateCount = 0, 
+  onOpenTutorial,
+  isOpen = true, 
+  onToggle 
+}) {
   const navSections = [
     {
       groupTitle: 'INVESTIGATE',
@@ -32,7 +41,13 @@ export default function Sidebar({ activeTab, setActiveTab, alertCount = 0, candi
       items: [
         { id: 'documents', label: 'Evidence Records', icon: FileText },
         { id: 'resolution', label: 'Entity Resolution', icon: GitMerge, badge: candidateCount },
-        { id: 'alerts', label: 'Anomaly Center', icon: AlertTriangle, badge: alertCount, badgeColor: 'bg-red-500/30 text-red-300 border-red-500/40' }
+        { 
+          id: 'alerts', 
+          label: 'Anomaly Center', 
+          icon: AlertTriangle, 
+          badge: alertCount, 
+          badgeColor: 'border-[var(--neon-pink)]/40 text-[var(--neon-pink)] shadow-[0_0_8px_rgba(255,56,112,0.2)]' 
+        }
       ]
     },
     {
@@ -45,11 +60,30 @@ export default function Sidebar({ activeTab, setActiveTab, alertCount = 0, candi
   ];
 
   return (
-    <aside className="w-64 bg-[#080b11] border-r border-intel-800/80 flex flex-col justify-between select-none shrink-0">
-      <div className="p-4 space-y-5 overflow-y-auto">
+    <aside 
+      className={`relative h-full glass-panel border-r border-[var(--border-subtle)] flex flex-col justify-between select-none shrink-0 transition-[width,opacity] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)] mono-font ${
+        isOpen ? 'w-64 opacity-100' : 'w-0 opacity-0 overflow-hidden border-r-0 pointer-events-none'
+      }`}
+    >
+      <div className="p-4 space-y-5 overflow-y-auto custom-scrollbar flex-1">
+        <div className="flex items-center justify-between pb-1">
+          <span className="text-[10px] tracking-widest uppercase font-bold text-[var(--text-muted)]">
+            WORKSPACE
+          </span>
+          {onToggle && (
+            <button
+              onClick={onToggle}
+              title="Collapse Sidebar"
+              className="p-1 rounded-md glass-card text-[var(--text-muted)] hover:text-[var(--neon-green)] hover:border-[var(--neon-green)]/40 transition-all duration-150 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95 cursor-pointer"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
         {navSections.map((section, sIdx) => (
           <div key={sIdx} className="space-y-1.5">
-            <div className="px-3 text-[10px] font-mono uppercase tracking-wider font-bold text-slate-500">
+            <div className="px-3 text-[10px] uppercase tracking-wider font-bold text-[var(--text-muted)]/70">
               {section.groupTitle}
             </div>
 
@@ -61,19 +95,21 @@ export default function Sidebar({ activeTab, setActiveTab, alertCount = 0, candi
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono transition-all ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all duration-150 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95 cursor-pointer ${
                       isActive
-                        ? 'bg-intel-accent/15 text-intel-accent border border-intel-accent/40 font-bold shadow-md shadow-intel-accent/10'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-intel-900 border border-transparent'
+                        ? 'bg-[var(--neon-green)]/20 text-[var(--neon-green)] border border-[var(--neon-green)]/60 font-bold shadow-[inset_0_0_12px_rgba(82,255,140,0.15),0_0_12px_rgba(82,255,140,0.25)]'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-2.5 truncate">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-intel-accent' : 'text-slate-400'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[var(--neon-green)]' : 'text-[var(--text-muted)]'}`} />
                       <span className="truncate">{item.label}</span>
                     </div>
 
                     {item.badge > 0 && (
-                      <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold border ${item.badgeColor || 'bg-amber-500/20 text-amber-300 border-amber-500/40'}`}>
+                      <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold glass-card ${
+                        item.badgeColor || 'border-[var(--neon-amber)]/40 text-[var(--neon-amber)]'
+                      }`}>
                         {item.badge}
                       </span>
                     )}
@@ -86,24 +122,24 @@ export default function Sidebar({ activeTab, setActiveTab, alertCount = 0, candi
       </div>
 
       {/* Bottom Responsible AI & Tutorial Link */}
-      <div className="p-4 border-t border-intel-800/80 bg-intel-950/60 space-y-2 text-[11px] font-mono">
+      <div className="p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-subtle)]/70 space-y-2 text-[11px]">
         {onOpenTutorial && (
           <button
             onClick={onOpenTutorial}
-            className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-xl bg-intel-900 hover:bg-intel-800 text-teal-300 hover:text-white border border-teal-500/40 font-mono text-xs transition-colors shadow-sm active:scale-95"
+            className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-lg glass-card text-[var(--neon-cyan)] hover:text-[var(--text-main)] hover:border-[var(--neon-cyan)]/50 font-mono text-xs transition-all duration-150 shadow-sm active:scale-95 cursor-pointer"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-teal-400" />
+            <HelpCircle className="w-3.5 h-3.5 text-[var(--neon-cyan)]" />
             <span>Feature Guide & Tutorial</span>
           </button>
         )}
 
-        <div className="flex items-center justify-between text-slate-400 pt-1">
-          <span className="text-[10px] text-slate-500">SIH 2026 PS 26189</span>
-          <span className="text-[10px] text-emerald-400 font-bold">MHA Prototype</span>
+        <div className="flex items-center justify-between text-[var(--text-muted)] pt-1">
+          <span className="text-[10px]">SIH 2026 PS 26189</span>
+          <span className="text-[10px] text-[var(--neon-green)] font-bold">MHA Prototype</span>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-intel-900 border border-intel-800 text-slate-400 text-[10.5px] leading-snug">
-          🛡️ <strong>Decision-Support Mode:</strong> Human verification required before formal legal action.
+        <div className="p-2.5 rounded-lg glass-card text-[var(--text-muted)] text-[10.5px] leading-snug">
+          🛡️ <strong className="text-[var(--text-main)]">Decision-Support Mode:</strong> Human verification required before formal legal action.
         </div>
       </div>
     </aside>

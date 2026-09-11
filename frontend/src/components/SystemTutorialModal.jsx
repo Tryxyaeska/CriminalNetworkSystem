@@ -13,18 +13,18 @@ import {
   HelpCircle, 
   ShieldAlert, 
   Target, 
-  CheckCircle2,
-  ExternalLink,
-  BookOpen,
-  FolderPlus,
-  Play,
-  RotateCcw,
-  CreditCard,
-  Bot,
-  ShieldCheck,
-  Search,
-  Sliders,
-  Move
+  CheckCircle2, 
+  ExternalLink, 
+  BookOpen, 
+  FolderPlus, 
+  Play, 
+  RotateCcw, 
+  CreditCard, 
+  Bot, 
+  ShieldCheck, 
+  Search, 
+  Sliders, 
+  Move 
 } from 'lucide-react';
 
 const TUTORIAL_STEPS = [
@@ -34,7 +34,7 @@ const TUTORIAL_STEPS = [
     category: "SYSTEM WORKFLOW",
     icon: FolderPlus,
     badge: "FRESH WORKSPACE",
-    badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    badgeColor: "var(--neon-green)",
     headline: "Start with an empty workspace or load the sample syndicate case.",
     description: "CRIMENET AI boots in a clean 'Workspace Ready' state (0 entities/0 documents). You have two intuitive ways to begin an investigation:",
     bulletPoints: [
@@ -52,7 +52,7 @@ const TUTORIAL_STEPS = [
     category: "INVESTIGATE",
     icon: Sparkles,
     badge: "EXECUTIVE BRIEF",
-    badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    badgeColor: "var(--neon-amber)",
     headline: "High-level syndicate topology, risk indicators, and ranked leads.",
     description: "The dashboard provides an instant executive summary of the criminal enterprise:",
     bulletPoints: [
@@ -71,7 +71,7 @@ const TUTORIAL_STEPS = [
     category: "INVESTIGATE",
     icon: Network,
     badge: "GRAPH ANALYTICS",
-    badgeColor: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+    badgeColor: "var(--neon-cyan)",
     headline: "Multi-modal interactive knowledge graph with Focus Person mode.",
     description: "Explore interconnected suspects, burner phones, vehicles, bank accounts, and locations:",
     bulletPoints: [
@@ -90,7 +90,7 @@ const TUTORIAL_STEPS = [
     category: "INVESTIGATE",
     icon: Clock,
     badge: "TEMPORAL SLIDER",
-    badgeColor: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
+    badgeColor: "var(--neon-amber)",
     headline: "Chronological reconstruction & pre-incident communication surges.",
     description: "Watch the criminal network assemble step-by-step across 6 chronological milestones:",
     bulletPoints: [
@@ -109,7 +109,7 @@ const TUTORIAL_STEPS = [
     category: "INVESTIGATE",
     icon: CreditCard,
     badge: "AML STRUCTURING",
-    badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    badgeColor: "var(--neon-green)",
     headline: "Trace layered Hawala desk payouts and corporate front companies.",
     description: "Follow the illicit money trail across cash couriers, smurfing accounts, and ultimate beneficiaries:",
     bulletPoints: [
@@ -127,7 +127,7 @@ const TUTORIAL_STEPS = [
     category: "DECISION SUPPORT",
     icon: Target,
     badge: "HYPOTHESIS MATRIX",
-    badgeColor: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+    badgeColor: "var(--neon-pink)",
     headline: "Test theories, simulate network disruption, and uncover missing links.",
     description: "Four powerful reasoning modules to support formal investigative strategy:",
     bulletPoints: [
@@ -146,7 +146,7 @@ const TUTORIAL_STEPS = [
     category: "VERIFY",
     icon: GitMerge,
     badge: "HUMAN-IN-THE-LOOP",
-    badgeColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+    badgeColor: "var(--neon-cyan)",
     headline: "Ingest unstructured evidence and merge fragmented criminal aliases.",
     description: "Transform messy real-world police documents into clean, structured intelligence:",
     bulletPoints: [
@@ -165,7 +165,7 @@ const TUTORIAL_STEPS = [
     category: "ASSIST",
     icon: Bot,
     badge: "AUDITABLE AI",
-    badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    badgeColor: "var(--neon-green)",
     headline: "Natural language query engine with 100% document citations.",
     description: "Collaborate with an intelligent, court-defensible investigative copilot:",
     bulletPoints: [
@@ -208,25 +208,25 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn select-none">
-      <div className="relative w-full max-w-4xl bg-[#0b0f19] border border-intel-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--bg-base)]/90 backdrop-blur-2xl mono-font animate-fadeIn select-none">
+      <div className="relative w-full max-w-4xl glass-panel border border-[var(--border-subtle)] rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Top Header */}
-        <div className="px-6 py-4 border-b border-intel-800/80 bg-intel-950/90 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-intel-accent/20 border border-intel-accent/40 flex items-center justify-center text-intel-accent shadow-md shadow-intel-accent/15">
+            <div className="w-9 h-9 rounded-xl bg-[var(--neon-green)]/15 border border-[var(--neon-green)]/35 flex items-center justify-center text-[var(--neon-green)] shadow-[0_0_10px_rgba(82,255,140,0.2)]">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-sm font-bold text-white tracking-tight font-mono">
+                <h2 className="text-sm font-bold text-[var(--text-main)] tracking-tight font-mono">
                   CRIMENET AI • Complete System & Feature Guide
                 </h2>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-intel-accent/15 text-intel-accent border border-intel-accent/30 font-bold">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--neon-green)]/15 text-[var(--neon-green)] border border-[var(--neon-green)]/30 font-bold shadow-[0_0_8px_rgba(82,255,140,0.15)]">
                   Tutorial
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono">
+              <p className="text-[11px] text-[var(--text-muted)] font-mono">
                 Interactive walkthrough of tools, graph intelligence, temporal analytics & AI reasoning
               </p>
             </div>
@@ -234,14 +234,14 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-intel-900 hover:bg-intel-800 text-slate-400 hover:text-white border border-intel-800 transition-colors"
+            className="p-1.5 rounded-lg glass-card text-[var(--text-muted)] hover:text-[var(--neon-green)] hover:border-[var(--neon-green)]/40 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Step Selector Horizontal Navigation Pills */}
-        <div className="px-6 py-2.5 bg-intel-950/60 border-b border-intel-800/60 flex items-center space-x-1.5 overflow-x-auto custom-scrollbar">
+        <div className="px-6 py-2.5 bg-[var(--bg-subtle)]/60 border-b border-[var(--border-subtle)] flex items-center space-x-1.5 overflow-x-auto custom-scrollbar">
           {TUTORIAL_STEPS.map((step, idx) => {
             const isCurrent = idx === currentStepIndex;
             const isCompleted = idx < currentStepIndex;
@@ -249,12 +249,12 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
               <button
                 key={step.step}
                 onClick={() => setCurrentStepIndex(idx)}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-mono whitespace-nowrap transition-all flex items-center space-x-1.5 ${
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-mono whitespace-nowrap transition-all flex items-center space-x-1.5 cursor-pointer ${
                   isCurrent
-                    ? 'bg-intel-accent text-slate-950 font-bold shadow-md shadow-intel-accent/25'
+                    ? 'bg-[var(--neon-green)] text-[var(--bg-subtle)] font-bold shadow-[0_0_12px_rgba(82,255,140,0.35)]'
                     : isCompleted
-                    ? 'bg-intel-900 text-slate-300 hover:text-white border border-intel-800'
-                    : 'bg-intel-950/80 text-slate-500 hover:text-slate-400 border border-intel-900'
+                    ? 'bg-[var(--bg-surface)] text-[var(--text-main)] hover:border-[var(--border-focus)] border border-[var(--border-subtle)]'
+                    : 'bg-[var(--bg-subtle)]/80 text-[var(--text-muted)] hover:text-[var(--text-main)] border border-transparent'
                 }`}
               >
                 <span>{step.step}.</span>
@@ -265,32 +265,42 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
         </div>
 
         {/* Modal Main Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-8 space-y-6">
           {/* Header Banner */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-intel-900/90 border border-intel-700/60">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl glass-card border-[var(--border-subtle)] shadow-inner">
             <div className="flex items-center space-x-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-intel-950 border border-intel-800 flex items-center justify-center text-intel-accent shrink-0 shadow-inner">
+              <div 
+                className="w-12 h-12 rounded-2xl glass-panel border flex items-center justify-center shrink-0 shadow-inner"
+                style={{ borderColor: `${currentStep.badgeColor}44`, color: currentStep.badgeColor }}
+              >
                 <Icon className="w-6 h-6" />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${currentStep.badgeColor}`}>
+                  <span 
+                    className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border"
+                    style={{ 
+                      color: currentStep.badgeColor, 
+                      backgroundColor: `${currentStep.badgeColor}22`, 
+                      borderColor: `${currentStep.badgeColor}55` 
+                    }}
+                  >
                     {currentStep.badge}
                   </span>
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-[var(--text-muted)]">
                     Step {currentStep.step} of {TUTORIAL_STEPS.length}
                   </span>
                 </div>
-                <h3 className="text-lg font-black text-white tracking-tight">
+                <h3 className="text-lg font-black text-[var(--text-main)] tracking-tight">
                   {currentStep.title}
                 </h3>
               </div>
             </div>
 
-            {/* Quick Action Button to jump directly to this feature */}
+            {/* Quick Action Button */}
             <button
               onClick={() => handleJumpToFeature(currentStep.targetTab)}
-              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-intel-accent hover:bg-sky-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-md shadow-intel-accent/20 shrink-0 self-start md:self-center"
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] font-bold font-mono text-xs transition-all shadow-[0_0_12px_rgba(82,255,140,0.35)] shrink-0 self-start md:self-center cursor-pointer active:scale-95"
             >
               <span>{currentStep.actionPrompt}</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -299,17 +309,17 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
 
           {/* Core Feature Explanation */}
           <div className="space-y-3">
-            <h4 className="text-sm font-bold text-white font-mono">
+            <h4 className="text-sm font-bold text-[var(--text-main)] font-mono">
               {currentStep.headline}
             </h4>
-            <p className="text-xs text-slate-300 leading-relaxed font-sans">
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed font-sans">
               {currentStep.description}
             </p>
           </div>
 
-          {/* Key Capabilities / Bullet Points */}
+          {/* Key Capabilities */}
           <div className="space-y-2.5">
-            <div className="text-[11px] font-mono text-slate-400 uppercase font-bold tracking-wider">
+            <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-wider">
               Key Capabilities & How to Use
             </div>
             <div className="grid grid-cols-1 gap-2.5">
@@ -320,11 +330,11 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
                 return (
                   <div 
                     key={pIdx}
-                    className="p-3.5 rounded-xl bg-intel-950/80 border border-intel-800/80 flex items-start space-x-3"
+                    className="p-3.5 rounded-xl glass-card border-[var(--border-subtle)] flex items-start space-x-3 shadow-inner"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-intel-accent shrink-0 mt-0.5" />
-                    <div className="text-xs text-slate-200 leading-snug">
-                      {title && <strong className="text-white font-semibold">{title}: </strong>}
+                    <CheckCircle2 className="w-4 h-4 text-[var(--neon-green)] shrink-0 mt-0.5" />
+                    <div className="text-xs text-[var(--text-main)] leading-snug">
+                      {title && <strong className="text-[var(--neon-green)] font-semibold">{title}: </strong>}
                       <span>{desc}</span>
                     </div>
                   </div>
@@ -334,18 +344,18 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
           </div>
 
           {/* Investigator Tip Callout */}
-          <div className="p-3.5 rounded-xl bg-intel-900/60 border border-intel-800 flex items-center space-x-2.5 text-xs text-intel-accent font-mono">
-            <Sparkles className="w-4 h-4 text-intel-accent shrink-0" />
+          <div className="p-3.5 rounded-xl bg-[var(--neon-amber)]/10 border border-[var(--neon-amber)]/30 flex items-center space-x-2.5 text-xs text-[var(--neon-amber)] font-mono shadow-sm">
+            <Sparkles className="w-4 h-4 text-[var(--neon-amber)] shrink-0" />
             <span>{currentStep.tip}</span>
           </div>
         </div>
 
         {/* Modal Bottom Footer Navigation */}
-        <div className="px-6 py-4 border-t border-intel-800 bg-intel-950 flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shrink-0">
           <button
             onClick={handlePrev}
             disabled={currentStepIndex === 0}
-            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-intel-900 hover:bg-intel-800 text-slate-300 disabled:opacity-30 disabled:hover:bg-intel-900 border border-intel-800 font-mono text-xs transition-colors"
+            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl glass-card text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--border-focus)] disabled:opacity-30 disabled:pointer-events-none font-mono text-xs transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Previous</span>
@@ -357,10 +367,10 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
               <button
                 key={idx}
                 onClick={() => setCurrentStepIndex(idx)}
-                className={`h-2 rounded-full transition-all ${
+                className={`h-2 rounded-full transition-all cursor-pointer ${
                   idx === currentStepIndex 
-                    ? 'w-6 bg-intel-accent' 
-                    : 'w-2 bg-intel-800 hover:bg-intel-700'
+                    ? 'w-6 bg-[var(--neon-green)] shadow-[0_0_8px_var(--neon-green)]' 
+                    : 'w-2 bg-[var(--border-subtle)] hover:bg-[var(--text-muted)]'
                 }`}
                 title={`Step ${idx + 1}`}
               />
@@ -370,7 +380,7 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
           {currentStepIndex < TUTORIAL_STEPS.length - 1 ? (
             <button
               onClick={handleNext}
-              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-intel-accent hover:bg-sky-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-md shadow-intel-accent/20"
+              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] font-bold font-mono text-xs transition-all shadow-[0_0_12px_rgba(82,255,140,0.35)] active:scale-95 cursor-pointer"
             >
               <span>Next Step</span>
               <ChevronRight className="w-4 h-4" />
@@ -378,7 +388,7 @@ export default function SystemTutorialModal({ isOpen, onClose, onNavigateTab }) 
           ) : (
             <button
               onClick={onClose}
-              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-md shadow-emerald-500/20"
+              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] font-bold font-mono text-xs transition-all shadow-[0_0_12px_rgba(82,255,140,0.35)] active:scale-95 cursor-pointer"
             >
               <span>Finish Tutorial</span>
               <CheckCircle2 className="w-4 h-4" />

@@ -1,16 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: dark;
+
+  /* Base & Surfaces */
+  --bg-base: #05070A;    
+  --bg-surface: #0B0E14;    
+  --bg-subtle: #030406;     
+  --border-subtle: #171D26;  
+  --border-focus: #52FF8C;   
+
+  /* Typography */
+  --text-main: #F3F6FA;     
+  --text-muted: #7B889B;     
+
+  /* High-Chroma Tamed Neons */
+  --neon-green: #52FF8C;   
+  --neon-cyan: #22E7E9;      
+  --neon-pink: #FF3870;      
+  --neon-amber: #FFAE19;     
+
+  --glass-bg: rgba(11, 14, 20, 0.328);
+  --glass-border: rgba(68, 69, 71, 0.85);
+}
+
+/* Firefox Scrollbar Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) var(--bg-base);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #080b11;
-  color: #f1f5f9;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: "Space Mono", monospace;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/bg-1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  filter: grayscale(30%) contrast(115%);
+  pointer-events: none;
 }
 
 /* Custom Scrollbars */
@@ -20,32 +63,59 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 3px;
+  background: var(--border-subtle);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--neon-cyan);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .mono-font {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Space Mono', monospace;
 }
 
+/* Native Browser Dropdown Overrides */
+select {
+  color-scheme: dark;
+  background-color: var(--bg-subtle) !important;
+  color: var(--text-main) !important;
+}
+
+select option {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  font-family: 'Space Mono', monospace;
+  padding: 4px;
+}
+
+/* Frosted Glass Containers */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid var(--glass-border);
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.6);
+  background: rgba(21, 26, 35, 0.5);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(51, 65, 85, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(86, 182, 194, 0.4);
+  transform: translateY(-1px);
 }
 
 /* Cross-browser SVG & Canvas pointer event fixes for Microsoft Edge */
@@ -57,3 +127,8 @@ canvas {
   touch-action: none;
 }
 
+main,
+main > div,
+main > div > div.flex-1 {
+  background-color: transparent !important;
+}

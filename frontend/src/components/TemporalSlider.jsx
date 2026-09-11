@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, Play, Pause, RotateCcw } from 'lucide-react';
 
 const TIMELINE_STOPS = [
@@ -13,26 +13,24 @@ const TIMELINE_STOPS = [
 export default function TemporalSlider({ onDateRangeChange }) {
   const [currentIndex, setCurrentIndex] = useState(TIMELINE_STOPS.length - 1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const intervalRef = useRef(null);
 
   const handleIndexChange = (idx) => {
-    setIsPlaying(false);
     setCurrentIndex(idx);
     const selectedStop = TIMELINE_STOPS[idx];
     if (onDateRangeChange) {
-      onDateRangeChange(null, selectedStop.date);
+      onDateRangeChange(null, selectedStop?.date);
     }
   };
 
-  // Playback timer effect that properly stops immediately when isPlaying turns false or unmounts
-  React.useEffect(() => {
-    let interval = null;
+  useEffect(() => {
     if (isPlaying) {
-      interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setCurrentIndex((prev) => {
           if (prev < TIMELINE_STOPS.length - 1) {
             const nextIdx = prev + 1;
             if (onDateRangeChange) {
-              onDateRangeChange(null, TIMELINE_STOPS[nextIdx].date);
+              onDateRangeChange(null, TIMELINE_STOPS[nextIdx]?.date);
             }
             return nextIdx;
           } else {
@@ -41,15 +39,14 @@ export default function TemporalSlider({ onDateRangeChange }) {
           }
         });
       }, 1400);
+    } else {
+      clearInterval(intervalRef.current);
     }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    return () => clearInterval(intervalRef.current);
   }, [isPlaying, onDateRangeChange]);
 
   const handlePlayToggle = () => {
     if (!isPlaying) {
-      // If at the end, restart from step 0
       if (currentIndex >= TIMELINE_STOPS.length - 1) {
         handleIndexChange(0);
       }
@@ -59,37 +56,42 @@ export default function TemporalSlider({ onDateRangeChange }) {
     }
   };
 
+  const progressPercent = (currentIndex / (TIMELINE_STOPS.length - 1)) * 100;
+
   return (
-    <div className="h-14 border-t border-intel-800 bg-intel-950/95 backdrop-blur px-6 flex items-center justify-between z-10 shrink-0 select-none">
+    <div className="h-14 border-t border-[var(--border-subtle)] glass-panel px-6 flex items-center justify-between z-10 shrink-0 select-none mono-font">
       {/* Controls */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-3 w-80 shrink-0">
         <button
+          type="button"
           onClick={handlePlayToggle}
-          className="p-1.5 rounded-lg bg-intel-accent hover:bg-sky-400 text-slate-950 transition-colors"
+          className="p-1.5 rounded-md bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] shadow-[0_0_12px_rgba(82,255,140,0.35)] transition-all duration-150 active:scale-95 cursor-pointer shrink-0 outline-none focus:outline-none"
         >
           {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
         </button>
 
-        <div className="flex items-center space-x-2 text-xs">
-          <Calendar className="w-4 h-4 text-intel-accent" />
-          <span className="text-slate-400 font-mono">Temporal Filter:</span>
-          <span className="text-white font-bold font-mono">{TIMELINE_STOPS[currentIndex].label}</span>
+        <div className="flex items-center space-x-2 text-xs overflow-hidden">
+          <Calendar className="w-4 h-4 text-[var(--neon-green)] shrink-0" />
+          <span className="text-[var(--text-muted)] shrink-0">Temporal Filter:</span>
+          <span className="text-[var(--text-main)] font-bold truncate">
+            {TIMELINE_STOPS[currentIndex]?.label}
+          </span>
         </div>
       </div>
 
-      {/* Stepper Slider with Step Node Circles */}
-      <div className="flex-1 max-w-xl mx-8 flex items-center space-x-4">
-        <div className="relative flex-1 flex items-center h-6">
-          {/* Background Track Line */}
-          <div className="absolute left-0 right-0 h-1.5 bg-intel-900 border border-intel-800 rounded-full" />
-          
-          {/* Active Filled Progress Line */}
-          <div 
-            className="absolute left-0 h-1.5 bg-intel-accent rounded-full transition-all duration-200"
-            style={{ width: `${(currentIndex / (TIMELINE_STOPS.length - 1)) * 100}%` }}
-          />
+      {/* Centered Rounded Progress Bar with Stepper Circles */}
+      <div className="flex-1 max-w-xl mx-6 flex items-center space-x-4">
+        <div className="relative flex-1 flex items-center h-5">
+          {/* Base Inset Track */}
+          <div className="absolute inset-x-0 h-1.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-full overflow-hidden">
+            {/* Smooth Fill Bar */}
+            <div
+              className="h-full bg-[var(--neon-green)] rounded-full shadow-[0_0_10px_var(--neon-green)] transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
 
-          {/* Stepped Circle Pips at Every Step */}
+          {/* Stepped Circle Pips */}
           {TIMELINE_STOPS.map((stop, idx) => {
             const percentage = (idx / (TIMELINE_STOPS.length - 1)) * 100;
             const isPassed = idx < currentIndex;
@@ -97,19 +99,23 @@ export default function TemporalSlider({ onDateRangeChange }) {
             return (
               <button
                 key={idx}
-                onClick={() => handleIndexChange(idx)}
+                type="button"
+                onClick={() => {
+                  setIsPlaying(false);
+                  handleIndexChange(idx);
+                }}
                 style={{ left: `${percentage}%` }}
-                className={`absolute -translate-x-1/2 rounded-full transition-all duration-200 z-10 flex items-center justify-center ${
+                className={`absolute -translate-x-1/2 rounded-full transition-all duration-200 z-10 flex items-center justify-center cursor-pointer outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none ${
                   isCurrent
-                    ? 'w-4 h-4 bg-intel-accent border-2 border-intel-950 shadow-md shadow-intel-accent/50 ring-4 ring-intel-accent/30 scale-110'
+                    ? 'w-4 h-4 bg-[var(--neon-green)] border-2 border-[var(--bg-base)] shadow-[0_0_12px_rgba(82,255,140,0.45)] scale-110'
                     : isPassed
-                    ? 'w-3.5 h-3.5 bg-intel-accent border-2 border-intel-950 hover:scale-125 shadow-sm shadow-intel-accent/30'
-                    : 'w-3.5 h-3.5 bg-intel-900 border-2 border-intel-700 hover:border-intel-accent hover:bg-slate-800 hover:scale-125'
+                    ? 'w-3.5 h-3.5 bg-[var(--neon-green)] border-2 border-[var(--bg-base)] hover:scale-125 shadow-sm shadow-[var(--neon-green)]/30'
+                    : 'w-3.5 h-3.5 bg-[var(--bg-surface)] border-2 border-[var(--border-subtle)] hover:border-[var(--neon-green)] hover:scale-125'
                 }`}
                 title={`${stop.label} (Step ${idx + 1})`}
               >
                 {isCurrent && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-950" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--bg-base)]" />
                 )}
               </button>
             );
@@ -121,24 +127,33 @@ export default function TemporalSlider({ onDateRangeChange }) {
             min="0"
             max={TIMELINE_STOPS.length - 1}
             value={currentIndex}
-            onChange={(e) => handleIndexChange(parseInt(e.target.value))}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+            onChange={(e) => {
+              setIsPlaying(false);
+              handleIndexChange(parseInt(e.target.value));
+            }}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none"
           />
         </div>
 
-        <span className="text-[10px] font-mono text-slate-400 whitespace-nowrap bg-intel-900 px-2 py-0.5 rounded border border-intel-800">
+        <span className="text-[10px] text-[var(--text-muted)] whitespace-nowrap glass-card px-2.5 py-1 rounded shrink-0">
           Step {currentIndex + 1}/{TIMELINE_STOPS.length}
         </span>
       </div>
 
-      {/* Reset */}
-      <button
-        onClick={() => handleIndexChange(TIMELINE_STOPS.length - 1)}
-        className="text-[11px] font-mono text-slate-400 hover:text-white flex items-center space-x-1"
-      >
-        <RotateCcw className="w-3 h-3" />
-        <span>Show All</span>
-      </button>
+      {/* Right Reset Action */}
+      <div className="w-28 flex justify-end shrink-0">
+        <button
+          type="button"
+          onClick={() => {
+            setIsPlaying(false);
+            handleIndexChange(TIMELINE_STOPS.length - 1);
+          }}
+          className="text-[11px] text-[var(--text-muted)] hover:text-[var(--neon-green)] hover:border-[var(--neon-green)]/40 flex items-center space-x-1.5 glass-card px-2.5 py-1 rounded transition-all duration-150 active:scale-95 cursor-pointer outline-none focus:outline-none"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>Show All</span>
+        </button>
+      </div>
     </div>
   );
 }

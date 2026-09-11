@@ -16,6 +16,7 @@ import EvidenceViewer from './components/EvidenceViewer';
 import InvestigationStoryModal from './components/InvestigationStoryModal';
 import SystemTutorialModal from './components/SystemTutorialModal';
 import NewCaseModal from './components/NewCaseModal';
+import { PanelLeftOpen } from 'lucide-react';
 import { 
   loadDemoCase, 
   resetSystem, 
@@ -37,6 +38,7 @@ export default function App() {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
   const [isNewCaseModalOpen, setIsNewCaseModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeCase, setActiveCase] = useState(null);
   
   const [alertCount, setAlertCount] = useState(0);
@@ -154,7 +156,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#080b11] text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen w-screen bg-transparent text-[var(--text-main)] overflow-hidden font-sans mono-font">
       {/* Top Navigation Bar */}
       <Navbar
         onReset={handleReset}
@@ -167,9 +169,22 @@ export default function App() {
       />
 
       {/* Main App Body */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Collapsed Sidebar Handle Pill */}
+        {!isSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            title="Expand Sidebar"
+            className="absolute top-3 left-0 z-40 flex items-center justify-center w-6 h-12 rounded-r-lg glass-card border-l-0 border-[var(--border-subtle)] hover:border-[var(--neon-green)]/60 text-[var(--text-muted)] hover:text-[var(--neon-green)] shadow-[2px_0_12px_rgba(0,0,0,0.5)] transition-all duration-150 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95 group cursor-pointer"
+          >
+            <PanelLeftOpen className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </button>
+        )}
+
         {/* Left Hierarchical Sidebar */}
         <Sidebar
+          isOpen={isSidebarOpen}
+          onToggle={() => setIsSidebarOpen(false)}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           alertCount={alertCount}
@@ -178,7 +193,7 @@ export default function App() {
         />
 
         {/* Center Workspace */}
-        <main className="flex-1 flex flex-col overflow-hidden bg-intel-950">
+        <main className="flex-1 flex flex-col overflow-hidden bg-transparent">
           {activeTab === 'dashboard' && (
             <DashboardView
               key={`dashboard-${refreshKey}`}

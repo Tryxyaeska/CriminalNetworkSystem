@@ -62,7 +62,7 @@ const TIMELINE_MILESTONES = [
 ];
 
 export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopilot }) {
-  const [currentStep, setCurrentStep] = useState(1); // Default to Feb (surge)
+  const [currentStep, setCurrentStep] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [graphData, setGraphData] = useState({ nodes: [], edges: [], total_nodes: 0, total_edges: 0 });
   const [loading, setLoading] = useState(false);
@@ -111,21 +111,21 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
   };
 
   return (
-    <div className="flex flex-col h-full bg-intel-950 overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-transparent overflow-hidden select-none mono-font">
       {/* Top Banner */}
-      <div className="h-14 border-b border-intel-800 bg-intel-950/90 px-6 flex items-center justify-between z-10 shrink-0">
+      <div className="h-14 border-b border-[var(--border-subtle)] glass-panel px-6 flex items-center justify-between z-10 shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="p-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400">
+          <div className="p-1.5 rounded-lg bg-[var(--neon-green)]/15 border border-[var(--neon-green)]/35 text-[var(--neon-green)] shadow-[0_0_8px_rgba(82,255,140,0.2)]">
             <Clock className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-tight flex items-center space-x-2">
+            <h2 className="text-sm font-bold text-[var(--text-main)] tracking-tight flex items-center space-x-2">
               <span>Time Machine: Syndicate Network Evolution</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--neon-green)]/15 text-[var(--neon-green)] border border-[var(--neon-green)]/35">
                 TEMPORAL RECONSTRUCTION
               </span>
             </h2>
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-[var(--text-muted)] font-mono">
               Scrub through timeline to observe how nodes, calls, and financial paths emerged chronologically.
             </p>
           </div>
@@ -135,10 +135,10 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${
               isPlaying
-                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20'
-                : 'bg-intel-800 hover:bg-intel-700 text-slate-200 border border-intel-700'
+                ? 'bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] shadow-[0_0_12px_rgba(82,255,140,0.35)]'
+                : 'glass-card text-[var(--text-main)] hover:border-[var(--neon-green)]/40'
             }`}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
@@ -148,22 +148,22 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
           <button
             onClick={handleReset}
             title="Reset to Beginning"
-            className="p-1.5 rounded-lg bg-intel-900 hover:bg-intel-800 text-slate-400 hover:text-white border border-intel-800 transition-colors"
+            className="p-1.5 rounded-lg glass-card text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors active:scale-95 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
 
-          <div className="px-3 py-1 rounded bg-intel-900 border border-intel-800 font-mono text-xs text-slate-300">
+          <div className="px-3 py-1 rounded glass-card font-mono text-xs text-[var(--text-main)]">
             {graphData.total_nodes} Nodes • {graphData.total_edges} Edges Active
           </div>
         </div>
       </div>
 
-      {/* Main Workspace (Graph on Left + Temporal Insights Card on Right) */}
+      {/* Main Workspace */}
       {graphData.nodes?.length > 0 ? (
         <div className="flex-1 flex overflow-hidden min-h-0 min-w-0 p-4 gap-4">
           {/* Left: Interactive Canvas */}
-          <div className="flex-1 h-full relative rounded-2xl border border-intel-800 overflow-hidden bg-[#070a10] shadow-2xl">
+          <div className="flex-1 h-full relative rounded-2xl glass-panel overflow-hidden shadow-2xl">
             <NetworkGraph
               graphData={graphData}
               onSelectNode={(id) => onSelectEntity && onSelectEntity(id)}
@@ -171,45 +171,44 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
             />
           </div>
 
-          {/* Right: Chronological Milestone Narrative Card */}
-          <div className="w-96 flex flex-col space-y-4 shrink-0 overflow-y-auto pr-1">
-            {/* Active Period Card */}
-            <div className="p-5 rounded-2xl bg-intel-900 border border-intel-700 shadow-xl space-y-3.5">
+          {/* Right: Narrative Card */}
+          <div className="w-96 flex flex-col space-y-4 shrink-0 overflow-y-auto custom-scrollbar pr-1">
+            <div className="p-5 rounded-2xl glass-panel shadow-xl space-y-3.5">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-intel-accent/20 text-intel-accent border border-intel-accent/40">
+                <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-[var(--neon-green)]/15 text-[var(--neon-green)] border border-[var(--neon-green)]/35 shadow-[0_0_8px_rgba(82,255,140,0.15)]">
                   {activeMilestone.label}
                 </span>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-[11px] text-[var(--text-muted)]">
                   Stage {currentStep + 1} of {TIMELINE_MILESTONES.length}
                 </span>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-white leading-tight">
+                <h3 className="text-sm font-bold text-[var(--text-main)] leading-tight">
                   {activeMilestone.headline}
                 </h3>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
                   {activeMilestone.summary}
                 </p>
               </div>
 
-              {/* AI Contextual Insight Callout */}
-              <div className="p-3 rounded-xl bg-intel-950 border border-intel-800 text-xs space-y-1">
-                <div className="flex items-center space-x-1.5 text-intel-gold font-mono font-bold text-[11px]">
+              {/* AI Insight */}
+              <div className="p-3 rounded-xl glass-card text-xs space-y-1">
+                <div className="flex items-center space-x-1.5 text-[var(--neon-green)] font-mono font-bold text-[11px]">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>AI TEMPORAL INTERPRETATION</span>
                 </div>
-                <p className="text-[11.5px] text-slate-300">
+                <p className="text-[11.5px] text-[var(--text-main)] leading-snug">
                   {activeMilestone.surgeNote}
                 </p>
               </div>
 
-              {/* Action Buttons */}
+              {/* Actions */}
               <div className="pt-1 flex items-center justify-between">
                 {activeMilestone.supportingDoc && (
                   <button
                     onClick={() => onOpenEvidence && onOpenEvidence(activeMilestone.supportingDoc)}
-                    className="flex items-center space-x-1 text-xs font-mono text-intel-accent hover:underline"
+                    className="flex items-center space-x-1 text-xs font-mono text-[var(--neon-amber)] hover:brightness-125 transition-colors cursor-pointer"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>View {activeMilestone.supportingDoc}</span>
@@ -218,7 +217,7 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
 
                 <button
                   onClick={() => onAskCopilot && onAskCopilot(`What happened during ${activeMilestone.label}? Summarize evidence and implicated suspects.`)}
-                  className="px-3 py-1 rounded-lg bg-intel-800 hover:bg-intel-700 text-slate-200 border border-intel-700 font-mono text-[11px] transition-colors"
+                  className="px-3 py-1.5 rounded-lg glass-card text-[var(--text-muted)] hover:text-[var(--neon-green)] hover:border-[var(--neon-green)]/40 text-[11px] transition-all duration-150 active:scale-95 cursor-pointer"
                 >
                   Ask AI Investigator →
                 </button>
@@ -226,8 +225,8 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
             </div>
 
             {/* Chronological Steps Selector */}
-            <div className="p-4 rounded-2xl bg-intel-900 border border-intel-800 space-y-2.5">
-              <div className="text-[11px] font-mono text-slate-400 uppercase font-bold tracking-wider">
+            <div className="p-4 rounded-2xl glass-panel space-y-2.5">
+              <div className="text-[11px] text-[var(--text-muted)] uppercase font-bold tracking-wider">
                 Investigation Stages
               </div>
 
@@ -239,21 +238,21 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
                       setIsPlaying(false);
                       setCurrentStep(idx);
                     }}
-                    className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between ${
+                    className={`w-full text-left p-3 rounded-xl border transition-all duration-150 flex items-center justify-between active:scale-95 cursor-pointer ${
                       idx === currentStep
-                        ? 'bg-intel-accent/15 border-intel-accent/50 text-white shadow-md'
-                        : 'bg-intel-950/60 border-intel-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                        ? 'bg-[var(--neon-green)]/15 border-[var(--neon-green)]/60 text-[var(--text-main)] shadow-[0_0_10px_rgba(82,255,140,0.15)]'
+                        : 'glass-card text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--neon-green)]/30'
                     }`}
                   >
                     <div className="space-y-0.5">
                       <div className="text-xs font-bold font-mono">
                         {m.label}
                       </div>
-                      <div className="text-[11px] truncate max-w-[220px]">
+                      <div className="text-[11px] truncate max-w-[220px] text-[var(--text-muted)]">
                         {m.headline}
                       </div>
                     </div>
-                    <div className={`w-2 h-2 rounded-full ${idx === currentStep ? 'bg-intel-accent animate-ping' : 'bg-slate-700'}`} />
+                    <div className={`w-2 h-2 rounded-full ${idx === currentStep ? 'bg-[var(--neon-green)] shadow-[0_0_8px_var(--neon-green)] animate-pulse' : 'bg-[var(--border-subtle)]'}`} />
                   </button>
                 ))}
               </div>
@@ -262,10 +261,10 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center p-8">
-          <div className="p-12 max-w-lg rounded-3xl bg-intel-900/60 border border-intel-800 text-center space-y-4">
-            <Clock className="w-10 h-10 text-slate-600 mx-auto" />
-            <h3 className="font-mono text-sm text-white font-bold">No Temporal Evolution Data</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="p-12 max-w-lg rounded-3xl glass-panel text-center space-y-4">
+            <Clock className="w-10 h-10 text-[var(--text-muted)] mx-auto" />
+            <h3 className="font-mono text-sm text-[var(--text-main)] font-bold">No Temporal Evolution Data</h3>
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
               No time-stamped evidence or call logs are available in this session. Ingest FIRs or load the demo investigation to trace syndicate timeline milestones.
             </p>
           </div>
@@ -274,9 +273,9 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
 
       {/* Bottom Timeline Step Slider */}
       {graphData.nodes?.length > 0 && (
-        <div className="h-16 border-t border-intel-800 bg-intel-950/90 px-8 flex items-center justify-between z-10 shrink-0">
+        <div className="h-16 border-t border-[var(--border-subtle)] glass-panel px-8 flex items-center justify-between z-10 shrink-0">
           <div className="w-full flex items-center space-x-6">
-            <span className="text-xs font-mono text-slate-400 whitespace-nowrap">
+            <span className="text-xs font-mono text-[var(--text-muted)] whitespace-nowrap">
               Timeline Scrubber:
             </span>
             <div className="flex-1 flex items-center space-x-3">
@@ -287,19 +286,19 @@ export default function TimelineView({ onSelectEntity, onOpenEvidence, onAskCopi
                       setIsPlaying(false);
                       setCurrentStep(idx);
                     }}
-                    className={`flex-1 py-2 px-3 rounded-xl border font-mono text-xs transition-all text-center flex flex-col items-center ${
+                    className={`flex-1 py-2 px-3 rounded-xl border font-mono text-xs transition-all duration-150 text-center flex flex-col items-center active:scale-95 cursor-pointer ${
                       idx === currentStep
-                        ? 'bg-intel-accent text-slate-950 font-bold border-intel-accent shadow-lg shadow-intel-accent/20'
+                        ? 'bg-[var(--neon-green)] text-[var(--bg-subtle)] font-bold border-[var(--neon-green)] shadow-[0_0_12px_rgba(82,255,140,0.3)]'
                         : idx < currentStep
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                        : 'bg-intel-900 text-slate-400 border-intel-800 hover:border-slate-700'
+                        ? 'bg-[var(--neon-green)]/15 text-[var(--neon-green)] border-[var(--neon-green)]/30'
+                        : 'glass-card text-[var(--text-muted)] hover:border-[var(--neon-green)]/40'
                     }`}
                   >
                     <span className="text-[11px] font-bold">{m.label}</span>
                     <span className="text-[9px] opacity-80">{m.activeEntitiesCount} Nodes Active</span>
                   </button>
                   {idx < TIMELINE_MILESTONES.length - 1 && (
-                    <ArrowRight className="w-4 h-4 text-slate-600 shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-[var(--border-subtle)] shrink-0" />
                   )}
                 </React.Fragment>
               ))}

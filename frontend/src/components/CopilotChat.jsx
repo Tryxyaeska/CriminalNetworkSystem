@@ -76,9 +76,6 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
-      // NOTE: We intentionally do NOT auto-call onHighlightGraph here because
-      // that would navigate the user away from the Copilot tab to the Network tab.
-      // The user can click the "Highlight Entities on Graph" button manually.
     } catch (err) {
       console.error('Copilot query error:', err);
       setMessages((prev) => [
@@ -96,32 +93,32 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
   };
 
   return (
-    <div className="flex flex-col h-full bg-intel-950 border border-intel-800 rounded-xl overflow-hidden shadow-2xl">
+    <div className="flex flex-col h-full bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--border-subtle)] rounded-xl overflow-hidden shadow-2xl">
       {/* Header */}
-      <div className="p-3.5 border-b border-intel-800 bg-intel-900/80 backdrop-blur flex items-center justify-between">
+      <div className="p-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/80 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-md shadow-purple-500/20">
-            <Bot className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--neon-cyan)]/15 border border-[var(--neon-cyan)]/30 flex items-center justify-center shadow-sm shadow-[var(--neon-cyan)]/20">
+            <Bot className="w-5 h-5 text-[var(--neon-cyan)]" />
           </div>
           <div>
-            <h2 className="font-bold text-sm text-slate-100 flex items-center space-x-2">
+            <h2 className="font-bold text-sm text-[var(--text-main)] flex items-center space-x-2">
               <span>Investigation Copilot</span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-mono border border-purple-500/30">
+              <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--neon-cyan)]/15 text-[var(--neon-cyan)] font-mono border border-[var(--neon-cyan)]/30">
                 Agentic Tools
               </span>
             </h2>
-            <p className="text-[11px] text-slate-400">Strictly Grounded • Evidence-Grounded AI • Tool-Orchestrated</p>
+            <p className="text-[11px] text-[var(--text-muted)]">Strictly Grounded • Evidence-Grounded AI • Tool-Orchestrated</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-1 text-[11px] text-intel-emerald bg-intel-emerald/10 border border-intel-emerald/20 px-2.5 py-1 rounded-md font-mono">
+        <div className="flex items-center space-x-1 text-[11px] text-[var(--neon-green)] bg-[var(--neon-green)]/10 border border-[var(--neon-green)]/20 px-2.5 py-1 rounded-md font-mono">
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>Local Engine</span>
         </div>
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4 text-xs">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -129,10 +126,10 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
           >
             {/* Message Bubble */}
             <div
-              className={`max-w-[85%] p-3.5 rounded-2xl ${
+              className={`max-w-[85%] p-3.5 rounded-2xl shadow-sm ${
                 msg.role === 'user'
-                  ? 'bg-intel-accent text-slate-950 font-medium rounded-tr-none shadow-md shadow-intel-accent/20'
-                  : 'bg-intel-900 border border-intel-800 text-slate-200 rounded-tl-none space-y-3'
+                  ? 'bg-[var(--neon-cyan)] text-[var(--bg-base)] font-medium rounded-tr-none'
+                  : 'bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-main)] rounded-tl-none space-y-3'
               }`}
             >
               <div className="whitespace-pre-line leading-relaxed">
@@ -141,16 +138,16 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
 
               {/* Tool Traces Accordion */}
               {msg.toolTraces?.length > 0 && (
-                <div className="pt-2 border-t border-intel-800 space-y-1.5">
-                  <div className="flex items-center space-x-1.5 text-[10px] font-mono uppercase text-slate-400 font-semibold">
-                    <Wrench className="w-3 h-3 text-purple-400" />
+                <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1.5">
+                  <div className="flex items-center space-x-1.5 text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">
+                    <Wrench className="w-3 h-3 text-[var(--neon-cyan)]" />
                     <span>Agent Tool Calls ({msg.toolTraces.length})</span>
                   </div>
                   <div className="space-y-1">
                     {msg.toolTraces.map((t, tIdx) => (
-                      <div key={tIdx} className="p-1.5 px-2 rounded bg-intel-950/80 border border-intel-800 font-mono text-[10px]">
-                        <span className="text-purple-300 font-bold">{t.tool_name}()</span>
-                        <p className="text-slate-400 text-[9px] mt-0.5">{t.output_summary}</p>
+                      <div key={tIdx} className="p-1.5 px-2 rounded bg-[var(--bg-subtle)] border border-[var(--border-subtle)] font-mono text-[10px]">
+                        <span className="text-[var(--neon-cyan)] font-bold">{t.tool_name}()</span>
+                        <p className="text-[var(--text-muted)] text-[9px] mt-0.5">{t.output_summary}</p>
                       </div>
                     ))}
                   </div>
@@ -159,9 +156,9 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
 
               {/* Evidence Citations */}
               {msg.citations?.length > 0 && (
-                <div className="pt-2 border-t border-intel-800 space-y-1.5">
-                  <div className="flex items-center space-x-1.5 text-[10px] font-mono uppercase text-slate-400 font-semibold">
-                    <FileText className="w-3 h-3 text-amber-400" />
+                <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1.5">
+                  <div className="flex items-center space-x-1.5 text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">
+                    <FileText className="w-3 h-3 text-[var(--neon-amber)]" />
                     <span>Evidence Citations ({msg.citations.length})</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -169,13 +166,13 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
                       <button
                         key={cIdx}
                         onClick={() => onOpenEvidence && onOpenEvidence(c.id)}
-                        className="p-1.5 px-2 rounded bg-intel-950 border border-intel-800 hover:border-amber-500/50 text-left transition-colors flex items-center justify-between"
+                        className="p-1.5 px-2 rounded bg-[var(--bg-subtle)] border border-[var(--border-subtle)] hover:border-[var(--neon-amber)]/50 text-left transition-colors flex items-center justify-between"
                       >
                         <div>
-                          <span className="font-mono font-bold text-[10px] text-amber-400">{c.id}</span>
-                          <span className="block text-[9px] text-slate-400 truncate max-w-[140px]">{c.title}</span>
+                          <span className="font-mono font-bold text-[10px] text-[var(--neon-amber)]">{c.id}</span>
+                          <span className="block text-[9px] text-[var(--text-muted)] truncate max-w-[140px]">{c.title}</span>
                         </div>
-                        <Eye className="w-3 h-3 text-slate-400" />
+                        <Eye className="w-3 h-3 text-[var(--text-muted)]" />
                       </button>
                     ))}
                   </div>
@@ -187,7 +184,7 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
                 <div className="pt-2 flex items-center space-x-2">
                   <button
                     onClick={() => onHighlightGraph && onHighlightGraph(msg.highlightNodes, msg.highlightEdges)}
-                    className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-mono text-[10px] border border-purple-500/40 transition-colors"
+                    className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-[var(--neon-cyan)]/20 hover:bg-[var(--neon-cyan)]/30 text-[var(--neon-cyan)] font-mono text-[10px] border border-[var(--neon-cyan)]/40 transition-colors"
                   >
                     <Sparkles className="w-3 h-3" />
                     <span>Highlight {msg.highlightNodes.length} Entities on Graph</span>
@@ -203,9 +200,9 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
                   <button
                     key={fIdx}
                     onClick={() => handleSend(f)}
-                    className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-intel-900/90 border border-intel-700 hover:border-intel-accent text-slate-300 hover:text-white text-[10px] transition-all"
+                    className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] text-[var(--text-muted)] text-[10px] transition-all duration-150 active:scale-95"
                   >
-                    <CornerDownRight className="w-2.5 h-2.5 text-intel-accent" />
+                    <CornerDownRight className="w-2.5 h-2.5 text-[var(--neon-cyan)]" />
                     <span>{f}</span>
                   </button>
                 ))}
@@ -215,8 +212,8 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
         ))}
 
         {isLoading && (
-          <div className="flex items-center space-x-2 p-3 rounded-2xl bg-intel-900 border border-intel-800 text-slate-400 max-w-[50%]">
-            <Bot className="w-4 h-4 text-purple-400 animate-spin" />
+          <div className="flex items-center space-x-2 p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-muted)] max-w-[50%]">
+            <Bot className="w-4 h-4 text-[var(--neon-cyan)] animate-spin" />
             <span className="font-mono text-xs">Invoking analytical graph tools...</span>
           </div>
         )}
@@ -225,19 +222,19 @@ I analyze ingested FIRs, CDR communications, banking transfers, and surveillance
       </div>
 
       {/* Input Box */}
-      <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="p-3 border-t border-intel-800 bg-intel-900/50">
+      <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="p-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/50">
         <div className="relative flex items-center">
           <input
             type="text"
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder="Ask an investigation question (e.g. 'Why is Vikram Malhotra important?')..."
-            className="w-full pl-4 pr-12 py-2.5 bg-intel-950 border border-intel-700 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-intel-accent text-xs font-mono"
+            className="w-full pl-4 pr-12 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--neon-cyan)] text-xs font-mono transition-colors"
           />
           <button
             type="submit"
             disabled={!inputQuery.trim() || isLoading}
-            className="absolute right-2 p-1.5 rounded-lg bg-intel-accent hover:bg-sky-400 text-slate-950 disabled:opacity-40 transition-all"
+            className="absolute right-2 p-1.5 rounded-lg bg-[var(--neon-cyan)] hover:brightness-110 text-[var(--bg-base)] disabled:opacity-40 transition-all active:scale-95"
           >
             <Send className="w-4 h-4" />
           </button>

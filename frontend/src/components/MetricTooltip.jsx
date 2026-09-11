@@ -41,7 +41,7 @@ export default function MetricTooltip({ term, text, title, className = "" }) {
 
   return (
     <span 
-      className={`relative inline-flex items-center group cursor-help ${className}`}
+      className={`relative inline-flex items-center group cursor-help mono-font ${className}`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
       onClick={(e) => {
@@ -49,17 +49,17 @@ export default function MetricTooltip({ term, text, title, className = "" }) {
         setIsOpen(!isOpen);
       }}
     >
-      <HelpCircle className="w-3.5 h-3.5 text-slate-400 hover:text-intel-accent transition-colors ml-1 inline shrink-0" />
+      <HelpCircle className="w-3.5 h-3.5 text-[var(--text-muted)] hover:text-[var(--neon-cyan)] transition-colors ml-1 inline shrink-0" />
       
       {isOpen && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-xl bg-intel-900 border border-intel-700 text-slate-200 text-[11px] font-sans shadow-2xl z-50 pointer-events-none text-left leading-tight backdrop-blur-md">
-          <span className="block font-bold text-intel-accent font-mono text-[10.5px] uppercase tracking-wider mb-1">
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-xl glass-panel border border-[var(--border-subtle)] text-[var(--text-main)] text-[11px] shadow-2xl z-50 pointer-events-none text-left leading-tight backdrop-blur-md">
+          <span className="block font-bold text-[var(--neon-cyan)] font-mono text-[10.5px] uppercase tracking-wider mb-1">
             {def.title}
           </span>
-          <span className="block text-slate-300 font-normal">
+          <span className="block text-[var(--text-muted)] font-normal font-sans">
             {def.text}
           </span>
-          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-intel-700" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-[var(--border-subtle)]" />
         </span>
       )}
     </span>

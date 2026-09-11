@@ -19,17 +19,17 @@ import {
 } from 'lucide-react';
 
 const TYPE_COLORS = {
-  PERSON: '#38bdf8',       // Sky Blue
-  PHONE: '#10b981',        // Emerald
-  VEHICLE: '#a855f7',      // Purple
-  LOCATION: '#ef4444',     // Crimson
-  ORGANIZATION: '#f59e0b', // Amber
-  ACCOUNT: '#06b6d4',      // Cyan
-  DEFAULT: '#94a3b8'       // Slate
+  PERSON: 'var(--neon-cyan)',       // Neon Cyan
+  PHONE: 'var(--neon-green)',       // Neon Green
+  VEHICLE: 'var(--neon-pink)',      // Neon Pink
+  LOCATION: '#FF4757',              // Red / Crimson
+  ORGANIZATION: 'var(--neon-amber)',// Neon Amber
+  ACCOUNT: '#2ED573',               // Mint / Cyan-Green
+  DEFAULT: 'var(--text-muted)'      // Muted Gray
 };
 
 const COMMUNITY_COLORS = [
-  '#38bdf8', '#f59e0b', '#10b981', '#a855f7', '#ef4444', '#ec4899', '#14b8a6'
+  '#22E7E9', '#FFAE19', '#52FF8C', '#FF3870', '#FF4757', '#A55EEA', '#2ED573'
 ];
 
 export default function NetworkGraph({ 
@@ -41,11 +41,9 @@ export default function NetworkGraph({
   colorByCommunity = false,
   onOpenEvidence,
   onStartDemo,
-  // Focus Person Props
-  mode = 'full', // 'full' | 'focus'
+  mode = 'full',
   focusPersonId = 'PER_001',
-  focusDepth = 1, // 1 or 2
-  // Filter Props
+  focusDepth = 1,
   relationshipTypeFilters = {
     COMMUNICATION: true,
     FINANCIAL: true,
@@ -63,7 +61,7 @@ export default function NetworkGraph({
   const [nodeDragStart, setNodeDragStart] = useState(null);
   const [hasDraggedNode, setHasDraggedNode] = useState(false);
   const [nodePositions, setNodePositions] = useState({});
-  const [layoutMode, setLayoutMode] = useState('circular'); // 'circular' | 'layered' | 'grid'
+  const [layoutMode, setLayoutMode] = useState('circular');
   const [selectedEdgeData, setSelectedEdgeData] = useState(null);
   const [hoveredEdgeId, setHoveredEdgeId] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -89,7 +87,6 @@ export default function NetworkGraph({
   const rawNodes = graphData?.nodes || [];
   const rawEdges = graphData?.edges || [];
 
-  // Filter edges based on relationship types
   const getRelationCategory = (relType) => {
     const t = (relType || '').toUpperCase();
     if (t.includes('CALL') || t.includes('COMMUNICAT')) return 'COMMUNICATION';
@@ -101,7 +98,6 @@ export default function NetworkGraph({
     return 'COMMUNICATION';
   };
 
-  // Compute Visible Subgraph based on Mode (Full vs Focus Person 1-Hop / 2-Hop)
   let visibleNodes = rawNodes;
   let visibleEdges = rawEdges;
 
@@ -110,7 +106,6 @@ export default function NetworkGraph({
     const secondHopNeighborIds = new Set();
     const activeEdgeIds = new Set();
 
-    // 1-Hop
     rawEdges.forEach((e) => {
       if (e.source === focusPersonId) {
         directNeighborIds.add(e.target);
@@ -121,7 +116,6 @@ export default function NetworkGraph({
       }
     });
 
-    // 2-Hop
     if (focusDepth >= 2) {
       rawEdges.forEach((e) => {
         if (directNeighborIds.has(e.source) && !directNeighborIds.has(e.target)) {
@@ -140,7 +134,6 @@ export default function NetworkGraph({
     visibleNodes = rawNodes.filter((n) => allAllowedIds.has(n.id));
     visibleEdges = rawEdges.filter((e) => allAllowedIds.has(e.source) && allAllowedIds.has(e.target));
   } else {
-    // In Full mode, apply relationship type checkboxes
     visibleEdges = rawEdges.filter((e) => {
       const cat = getRelationCategory(e.label);
       return relationshipTypeFilters[cat] !== false;
@@ -150,13 +143,11 @@ export default function NetworkGraph({
       connectedNodeIds.add(e.source);
       connectedNodeIds.add(e.target);
     });
-    // Keep nodes that are connected or highlighted
     visibleNodes = rawNodes.filter((n) => connectedNodeIds.has(n.id) || highlightNodeIds.includes(n.id) || rawNodes.length < 15);
   }
 
   const hasNodes = visibleNodes.length > 0;
 
-  // Initialize node layout positions
   useEffect(() => {
     if (!hasNodes) return;
 
@@ -167,7 +158,6 @@ export default function NetworkGraph({
     const newPositions = {};
 
     if (mode === 'focus' && focusPersonId) {
-      // Focus person at exact center
       newPositions[focusPersonId] = { x: centerX, y: centerY };
 
       const directNodes = visibleNodes.filter((n) => n.id !== focusPersonId);
@@ -180,7 +170,6 @@ export default function NetworkGraph({
         };
       });
     } else if (layoutMode === 'circular') {
-      // Primary bridge entities in center, others in orbits
       const centerNodes = visibleNodes.filter(n => n.betweenness > 0.15 || n.id === 'PER_001');
       const outerNodes = visibleNodes.filter(n => !centerNodes.includes(n));
 
@@ -226,7 +215,6 @@ export default function NetworkGraph({
     setNodePositions(newPositions);
   }, [graphData, layoutMode, mode, focusPersonId, focusDepth, hasNodes]);
 
-  // Drag canvas handlers
   const handleMouseDown = (e) => {
     if (e.target.tagName === 'svg' || e.target.id === 'canvas-bg') {
       setIsDraggingCanvas(true);
@@ -279,15 +267,15 @@ export default function NetworkGraph({
   return (
     <div className={`${
       isFullscreen 
-        ? 'fixed inset-0 z-50 w-screen h-screen bg-[#070a10] overflow-hidden flex flex-col select-none animate-fadeIn' 
-        : 'relative w-full h-full min-h-[480px] bg-[#070a10] overflow-hidden rounded-2xl border border-intel-800 shadow-2xl flex flex-col select-none'
+        ? 'fixed inset-0 z-50 w-screen h-screen bg-[var(--bg-base)] overflow-hidden flex flex-col select-none animate-fadeIn mono-font' 
+        : 'relative w-full h-full min-h-[480px] bg-[var(--bg-base)] overflow-hidden rounded-2xl border border-[var(--border-subtle)] shadow-2xl flex flex-col select-none mono-font'
     }`}>
       {/* Fullscreen Mode Top Banner */}
       {isFullscreen && (
-        <div className="absolute top-4 left-4 z-30 flex items-center space-x-2.5 px-3.5 py-1.5 rounded-xl bg-intel-950/95 border border-intel-700 text-xs font-mono text-slate-200 backdrop-blur shadow-2xl">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-bold text-white">Full Screen Graph Mode</span>
-          <span className="text-slate-400 text-[10.5px]">| Press ESC or click minimize to exit</span>
+        <div className="absolute top-4 left-4 z-30 flex items-center space-x-2.5 px-3.5 py-1.5 rounded-xl glass-panel border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-main)] backdrop-blur shadow-2xl">
+          <span className="w-2 h-2 rounded-full bg-[var(--neon-green)] animate-pulse" />
+          <span className="font-bold text-[var(--text-main)]">Full Screen Graph Mode</span>
+          <span className="text-[var(--text-muted)] text-[10.5px]">| Press ESC or click minimize to exit</span>
         </div>
       )}
 
@@ -305,10 +293,10 @@ export default function NetworkGraph({
       >
         <defs>
           <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#f59e0b" floodOpacity="0.9" />
+            <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="var(--neon-amber)" floodOpacity="0.9" />
           </filter>
           <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#38bdf8" floodOpacity="0.8" />
+            <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="var(--neon-cyan)" floodOpacity="0.8" />
           </filter>
           <marker
             id="arrow"
@@ -319,7 +307,7 @@ export default function NetworkGraph({
             markerHeight="5"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
           </marker>
           <marker
             id="arrow-highlight"
@@ -330,7 +318,7 @@ export default function NetworkGraph({
             markerHeight="6"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--neon-amber)" />
           </marker>
           <marker
             id="arrow-hover"
@@ -341,7 +329,7 @@ export default function NetworkGraph({
             markerHeight="6"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--neon-cyan)" />
           </marker>
         </defs>
 
@@ -359,8 +347,6 @@ export default function NetworkGraph({
 
             const midX = (p1.x + p2.x) / 2;
             const midY = (p1.y + p2.y) / 2;
-
-            // Show label in focus mode, or on hover, or when selected/highlighted
             const showLabel = mode === 'focus' || isHigh || isHovered || isSelected;
 
             return (
@@ -380,9 +366,9 @@ export default function NetworkGraph({
                   y1={p1.y}
                   x2={p2.x}
                   y2={p2.y}
-                  stroke={isHigh || isSelected ? '#f59e0b' : isHovered ? '#38bdf8' : '#334155'}
-                  strokeWidth={isHigh || isSelected ? 3 : isHovered ? 2.5 : 1.5}
-                  strokeOpacity={isHigh || isSelected || isHovered ? 1.0 : 0.6}
+                  stroke={isHigh || isSelected ? 'var(--neon-amber)' : isHovered ? 'var(--neon-cyan)' : '#475569'}
+                  strokeWidth={isHigh || isSelected ? 3 : isHovered ? 2.5 : 1.75}
+                  strokeOpacity={isHigh || isSelected || isHovered ? 1.0 : 0.85}
                   markerEnd={isHigh || isSelected ? 'url(#arrow-highlight)' : isHovered ? 'url(#arrow-hover)' : 'url(#arrow)'}
                 />
 
@@ -394,19 +380,19 @@ export default function NetworkGraph({
                       y={midY - 7}
                       width={edge.label.length * 6.4}
                       height={13}
-                      fill="#080b11"
+                      fill="var(--bg-surface)"
                       rx="3"
-                      stroke={isHigh || isSelected ? '#f59e0b' : isHovered ? '#38bdf8' : '#1e293b'}
-                      strokeWidth="0.8"
+                      stroke={isHigh || isSelected ? 'var(--neon-amber)' : isHovered ? 'var(--neon-cyan)' : '#475569'}
+                      strokeWidth="1"
                       opacity="0.95"
                     />
                     <text
                       x={midX}
                       y={midY + 2.5}
                       textAnchor="middle"
-                      fill={isHigh || isSelected ? '#f59e0b' : isHovered ? '#38bdf8' : '#94a3b8'}
+                      fill={isHigh || isSelected ? 'var(--neon-amber)' : isHovered ? 'var(--neon-cyan)' : 'var(--text-main)'}
                       fontSize="7.5px"
-                      fontFamily="monospace"
+                      fontFamily="Space Mono, monospace"
                       fontWeight="bold"
                     >
                       {edge.label}
@@ -448,7 +434,7 @@ export default function NetworkGraph({
                   <circle
                     r={isCenterFocus ? "28" : "24"}
                     fill="none"
-                    stroke={isCenterFocus ? "#38bdf8" : "#f59e0b"}
+                    stroke={isCenterFocus ? "var(--neon-cyan)" : "var(--neon-amber)"}
                     strokeWidth="3"
                     filter={isCenterFocus ? "url(#glow-blue)" : "url(#glow-gold)"}
                     className="animate-pulse"
@@ -459,14 +445,15 @@ export default function NetworkGraph({
                 <circle
                   r={isCenterFocus ? 22 : (node.betweenness > 0.2 ? 18 : 15)}
                   fill={color}
-                  stroke="#080b11"
+                  fillOpacity={isHigh ? 1.0 : 0.9}
+                  stroke="#1e293b"
                   strokeWidth="2.5"
                   className="hover:scale-110 transition-transform"
                 />
 
                 {/* Risk Dot */}
                 {node.risk_score > 0.75 && (
-                  <circle r="3.5" fill="#ffffff" />
+                  <circle r="3.5" fill="var(--neon-pink)" />
                 )}
 
                 {/* Label Box */}
@@ -475,9 +462,9 @@ export default function NetworkGraph({
                   y={isCenterFocus ? 26 : 21}
                   width={node.label.length * 6.8}
                   height={14}
-                  fill="#080b11"
+                  fill="var(--bg-surface)"
                   rx="3"
-                  stroke={isHigh ? (isCenterFocus ? '#38bdf8' : '#f59e0b') : '#1e293b'}
+                  stroke={isHigh ? (isCenterFocus ? 'var(--neon-cyan)' : 'var(--neon-amber)') : '#334155'}
                   strokeWidth="1"
                   opacity="0.95"
                 />
@@ -487,9 +474,9 @@ export default function NetworkGraph({
                   x="0"
                   y={isCenterFocus ? 36 : 31}
                   textAnchor="middle"
-                  fill="#f8fafc"
+                  fill="var(--text-main)"
                   fontSize="8.5px"
-                  fontFamily="Plus Jakarta Sans, sans-serif"
+                  fontFamily="Space Mono, monospace"
                   fontWeight="bold"
                 >
                   {node.label}
@@ -502,28 +489,28 @@ export default function NetworkGraph({
 
       {/* Selected Edge Inspector Popover */}
       {selectedEdgeData && (
-        <div className="absolute top-16 left-6 p-4 rounded-xl bg-intel-950/95 border border-intel-700 shadow-2xl backdrop-blur text-xs space-y-2.5 z-30 max-w-sm animate-fade-in">
-          <div className="flex items-center justify-between border-b border-intel-800 pb-1.5">
-            <span className="font-mono text-[10.5px] font-bold text-intel-accent uppercase">
+        <div className="absolute top-16 left-6 p-4 rounded-xl glass-panel border border-[var(--border-subtle)] shadow-2xl backdrop-blur text-xs space-y-2.5 z-30 max-w-sm animate-fade-in">
+          <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-1.5">
+            <span className="font-mono text-[10.5px] font-bold text-[var(--neon-cyan)] uppercase">
               Relationship Inspector
             </span>
             <button
               onClick={() => setSelectedEdgeData(null)}
-              className="p-1 rounded text-slate-400 hover:text-white"
+              className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--text-main)] cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
 
           <div className="space-y-1 font-mono text-[11px]">
-            <div className="flex items-center space-x-1.5 text-white font-bold">
+            <div className="flex items-center space-x-1.5 text-[var(--text-main)] font-bold">
               <span>{selectedEdgeData.source}</span>
-              <span className="text-intel-gold">➔ [{selectedEdgeData.label}] ➔</span>
+              <span className="text-[var(--neon-amber)]">➔ [{selectedEdgeData.label}] ➔</span>
               <span>{selectedEdgeData.target}</span>
             </div>
-            <div className="text-slate-400">Confidence: {Math.round((selectedEdgeData.confidence || 1.0) * 100)}%</div>
+            <div className="text-[var(--text-muted)]">Confidence: {Math.round((selectedEdgeData.confidence || 1.0) * 100)}%</div>
             {selectedEdgeData.timestamp && (
-              <div className="text-slate-400">Date Logged: {selectedEdgeData.timestamp}</div>
+              <div className="text-[var(--text-muted)]">Date Logged: {selectedEdgeData.timestamp}</div>
             )}
           </div>
 
@@ -532,7 +519,7 @@ export default function NetworkGraph({
               onClick={() => {
                 if (onOpenEvidence) onOpenEvidence(selectedEdgeData.document_id);
               }}
-              className="w-full flex items-center justify-center space-x-1 py-1.5 rounded-lg bg-intel-800 hover:bg-intel-700 text-intel-accent border border-intel-700 font-mono text-[11px] transition-colors"
+              className="w-full flex items-center justify-center space-x-1 py-1.5 rounded-lg glass-card text-[var(--neon-cyan)] hover:border-[var(--neon-cyan)]/50 font-mono text-[11px] transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>View Source Evidence ({selectedEdgeData.document_id})</span>
@@ -543,12 +530,12 @@ export default function NetworkGraph({
 
       {/* Floating Canvas Controls */}
       {hasNodes && (
-        <div className="absolute top-4 right-4 flex items-center space-x-2 p-1.5 rounded-xl bg-intel-950/95 border border-intel-700 backdrop-blur shadow-2xl z-20">
+        <div className="absolute top-4 right-4 flex items-center space-x-2 p-1.5 rounded-xl glass-panel border border-[var(--border-subtle)] backdrop-blur shadow-2xl z-20">
           {mode === 'full' && (
             <select
               value={layoutMode}
               onChange={(e) => setLayoutMode(e.target.value)}
-              className="bg-intel-900 border border-intel-700 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-200 focus:outline-none focus:border-intel-accent"
+              className="bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-lg px-2.5 py-1 text-xs font-mono text-[var(--text-main)] focus:outline-none focus:border-[var(--border-focus)] cursor-pointer"
             >
               <option value="circular">Circular Hub (Cluster)</option>
               <option value="layered">Layered By Type</option>
@@ -559,31 +546,31 @@ export default function NetworkGraph({
           <button
             onClick={handleZoomIn}
             title="Zoom In"
-            className="p-1.5 rounded-lg hover:bg-intel-800 text-slate-300 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-[var(--bg-subtle)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={handleZoomOut}
             title="Zoom Out"
-            className="p-1.5 rounded-lg hover:bg-intel-800 text-slate-300 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-[var(--bg-subtle)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer"
           >
             <ZoomOut className="w-4 h-4" />
           </button>
           <button
             onClick={handleFit}
             title="Center / Reset View"
-            className="p-1.5 rounded-lg hover:bg-intel-800 text-slate-300 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-[var(--bg-subtle)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
           <button
             onClick={toggleFullscreen}
             title={isFullscreen ? "Exit Full Screen (Esc)" : "Expand to Full Screen"}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               isFullscreen 
-                ? 'bg-intel-accent/20 text-intel-accent border border-intel-accent/40 shadow-md' 
-                : 'hover:bg-intel-800 text-slate-300'
+                ? 'bg-[var(--neon-green)]/20 text-[var(--neon-green)] border border-[var(--neon-green)]/40 shadow-md' 
+                : 'hover:bg-[var(--bg-subtle)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -593,34 +580,34 @@ export default function NetworkGraph({
 
       {/* Legend Badge */}
       {hasNodes && (
-        <div className="absolute bottom-4 left-4 p-3 rounded-xl bg-intel-950/95 border border-intel-800 backdrop-blur text-[11px] space-y-1.5 shadow-2xl z-20">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+        <div className="absolute bottom-4 left-4 p-3 rounded-xl glass-panel border border-[var(--border-subtle)] backdrop-blur text-[11px] space-y-1.5 shadow-2xl z-20">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
             {mode === 'focus' ? 'Focus Ego Network' : 'Entity Type Legend'}
           </div>
           <div className="grid grid-cols-3 gap-x-3.5 gap-y-1 text-[10.5px]">
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]"></span>
-              <span className="text-slate-300">Person</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--neon-cyan)]"></span>
+              <span className="text-[var(--text-muted)]">Person</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
-              <span className="text-slate-300">Phone</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--neon-green)]"></span>
+              <span className="text-[var(--text-muted)]">Phone</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#a855f7]"></span>
-              <span className="text-slate-300">Vehicle</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--neon-pink)]"></span>
+              <span className="text-[var(--text-muted)]">Vehicle</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></span>
-              <span className="text-slate-300">Location</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FF4757]"></span>
+              <span className="text-[var(--text-muted)]">Location</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]"></span>
-              <span className="text-slate-300">Org</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--neon-amber)]"></span>
+              <span className="text-[var(--text-muted)]">Org</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#06b6d4]"></span>
-              <span className="text-slate-300">Account</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#2ED573]"></span>
+              <span className="text-[var(--text-muted)]">Account</span>
             </div>
           </div>
         </div>
@@ -628,13 +615,13 @@ export default function NetworkGraph({
 
       {/* Empty State Overlay */}
       {!hasNodes && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-3 z-10 bg-intel-950/80">
-          <div className="w-12 h-12 rounded-2xl bg-intel-900 border border-intel-800 flex items-center justify-center text-slate-500">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-3 z-10 bg-[var(--bg-base)]/80">
+          <div className="w-12 h-12 rounded-2xl glass-card border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-muted)]">
             <Network className="w-6 h-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-white font-mono">No Graph Entities Available</h3>
-            <p className="text-xs text-slate-400 max-w-sm">
+            <h3 className="text-sm font-bold text-[var(--text-main)] font-mono">No Graph Entities Available</h3>
+            <p className="text-xs text-[var(--text-muted)] max-w-sm">
               {mode === 'focus'
                 ? 'No direct or multi-hop connections found for the selected entity under current filters.'
                 : 'No entities or relationships match current visibility filters. Adjust filters or load the demo investigation.'}
@@ -643,7 +630,7 @@ export default function NetworkGraph({
           {onStartDemo && (
             <button
               onClick={onStartDemo}
-              className="px-4 py-2 rounded-xl bg-intel-accent hover:bg-sky-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-md shadow-intel-accent/20"
+              className="px-4 py-2 rounded-xl bg-[var(--neon-green)] hover:brightness-110 text-[var(--bg-subtle)] font-bold font-mono text-xs transition-all shadow-[0_0_12px_rgba(82,255,140,0.35)] active:scale-95 cursor-pointer"
             >
               Load Demo Investigation
             </button>

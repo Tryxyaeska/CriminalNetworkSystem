@@ -43,22 +43,22 @@ export default function EntityResolutionModal({ onResolutionApplied }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-intel-950 p-6 space-y-5 overflow-y-auto">
+    <div className="flex flex-col h-full bg-[var(--bg-base)] p-6 space-y-5 overflow-y-auto">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-intel-800 pb-4">
+      <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4">
         <div>
           <div className="flex items-center space-x-2">
-            <GitMerge className="w-6 h-6 text-purple-400" />
-            <h1 className="text-lg font-extrabold text-white tracking-tight">ENTITY RESOLUTION & ALIAS DISAMBIGUATION</h1>
+            <GitMerge className="w-6 h-6 text-[var(--neon-pink)]" />
+            <h1 className="text-lg font-extrabold text-[var(--text-main)] tracking-tight">ENTITY RESOLUTION & ALIAS DISAMBIGUATION</h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             Detects potential alias variations, phonetic name matches, and identity duplicates. Requires human confirmation before physical graph merge.
           </p>
         </div>
 
         <button
           onClick={loadCandidates}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-intel-900 border border-intel-800 hover:border-intel-700 text-xs font-mono text-slate-300 transition-colors"
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--neon-cyan)]/50 text-xs font-mono text-[var(--text-main)] transition-all duration-150 active:scale-95"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Rescan Candidates</span>
@@ -67,7 +67,7 @@ export default function EntityResolutionModal({ onResolutionApplied }) {
 
       {/* Candidate List */}
       {loading ? (
-        <div className="p-12 text-center text-slate-400 text-xs font-mono">
+        <div className="p-12 text-center text-[var(--text-muted)] text-xs font-mono">
           Evaluating phonetic similarities and structural graph contexts...
         </div>
       ) : candidates.length > 0 ? (
@@ -75,34 +75,34 @@ export default function EntityResolutionModal({ onResolutionApplied }) {
           {candidates.map((cand) => (
             <div
               key={cand.id}
-              className="p-4 rounded-xl bg-intel-900 border border-intel-800 space-y-3"
+              className="p-4 rounded-xl bg-[var(--glass-bg)] border border-[var(--border-subtle)] space-y-3 hover:border-[var(--neon-pink)]/40 transition-colors"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg bg-purple-500/20 text-purple-300 font-bold font-mono text-xs">
+                  <div className="p-2 rounded-lg bg-[var(--neon-pink)]/15 text-[var(--neon-pink)] font-bold font-mono text-xs">
                     {Math.round((cand.similarity_score || 0.8) * 100)}% MATCH
                   </div>
                   <div>
                     <div className="flex items-center space-x-2 text-xs font-mono">
-                      <span className="text-intel-accent font-bold">{cand.source_name}</span>
-                      <span className="text-slate-500">↔</span>
-                      <span className="text-emerald-400 font-bold">{cand.target_name}</span>
+                      <span className="text-[var(--neon-cyan)] font-bold">{cand.source_name}</span>
+                      <span className="text-[var(--text-muted)]">↔</span>
+                      <span className="text-[var(--neon-green)] font-bold">{cand.target_name}</span>
                     </div>
-                    <p className="text-xs text-slate-300 mt-1">{cand.reason}</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-1">{cand.reason}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleMerge(cand)}
-                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-intel-emerald hover:bg-emerald-400 text-slate-950 text-xs font-semibold shadow-md transition-all active:scale-95"
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-[var(--neon-green)]/20 text-[var(--neon-green)] hover:bg-[var(--neon-green)] hover:text-[var(--bg-base)] text-xs font-semibold shadow-md transition-all active:scale-95"
                   >
                     <Check className="w-3.5 h-3.5" />
                     <span>Confirm Merge</span>
                   </button>
                   <button
                     onClick={() => handleDismiss(cand.id)}
-                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-intel-800 hover:bg-intel-700 text-slate-300 text-xs transition-colors"
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--neon-pink)] border border-[var(--border-subtle)] text-xs transition-colors"
                   >
                     <X className="w-3.5 h-3.5" />
                     <span>Dismiss</span>
@@ -113,7 +113,7 @@ export default function EntityResolutionModal({ onResolutionApplied }) {
           ))}
         </div>
       ) : (
-        <div className="p-12 text-center text-slate-500 text-xs">
+        <div className="p-12 text-center text-[var(--text-muted)] text-xs">
           No pending entity resolution candidates found. Graph identities are currently resolved.
         </div>
       )}
